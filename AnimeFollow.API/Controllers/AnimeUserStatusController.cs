@@ -1,4 +1,5 @@
-﻿using AnimeFollowMVC.Services.DepotInterfaces;
+﻿using AnimeFollow.Services.Models;
+using AnimeFollowMVC.Services.DepotInterfaces;
 using AnimeFollowMVC.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +45,7 @@ namespace AnimeFollowMVC.API.Controllers
         [ProducesResponseType(203)]
         [ProducesResponseType(400)]
         [HttpPost]
-        public ActionResult Post([FromBody] AnimeUserStatus p_animeUserStatus)
+        public ActionResult Post([FromBody] AnimeUserStatus_DTO p_animeUserStatus)
         {
             if (ModelState.IsValid == false)
             {
@@ -60,7 +61,7 @@ namespace AnimeFollowMVC.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [HttpPut("{p_id}")]
-        public ActionResult Put(int p_id, [FromBody] AnimeUserStatus p_animeUserStatus)
+        public ActionResult Put(int p_id, [FromBody] AnimeUserStatus_DTO p_animeUserStatus)
         {
             if (ModelState.IsValid == false)
             {

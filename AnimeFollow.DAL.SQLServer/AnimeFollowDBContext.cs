@@ -1,4 +1,5 @@
-﻿using AnimeFollowMVC.Services.Models;
+﻿using AnimeFollow.Services.Models;
+using AnimeFollowMVC.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,6 @@ namespace AnimeFollowMVC.Services
 
         public DbSet<Anime> Animes { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<AnimeUserStatus> AnimeUserStatuses { get; set; }
+        public DbSet<AnimeUserStatus_DTO> AnimeUserStatuses { get; set; }
     }
 }

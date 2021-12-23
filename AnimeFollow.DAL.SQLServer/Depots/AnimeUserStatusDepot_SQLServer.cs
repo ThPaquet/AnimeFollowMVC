@@ -1,4 +1,5 @@
-﻿using AnimeFollowMVC.Services;
+﻿using AnimeFollow.Services.Models;
+using AnimeFollowMVC.Services;
 using AnimeFollowMVC.Services.DepotInterfaces;
 using AnimeFollowMVC.Services.Models;
 using System;
@@ -15,26 +16,42 @@ namespace AnimeFollowMVC.DAL.SQLServer.Depots
 
         public IEnumerable<AnimeUserStatus> GetAnimeUserStatuses()
         {
-            return this._context.AnimeUserStatuses.ToArray();
-        }
-        public AnimeUserStatus? GetAnimeUserStatus(int p_id)
-        {
-            return this._context.AnimeUserStatuses
-                .SingleOrDefault(a => a.Id == p_id);
+            IEnumerable<AnimeUserStatus_DTO> DTOs = this._context.AnimeUserStatuses.ToArray();
+
+            return DTOs
+                .Select(d => ToEntity(d))
+                .ToArray();
         }
 
-        public void CreateAnimeUserStatus(AnimeUserStatus p_animeUserStatus)
+        public IEnumerable<AnimeUserStatus> GetAnimeUserStatusesByUserId(int p_id)
+        {
+            IEnumerable<AnimeUserStatus_DTO> DTOs = this._context.AnimeUserStatuses
+                .Where(d => d.UserId == p_id);
+
+            return DTOs
+                .Select(d => ToEntity(d))
+                .ToArray();
+        }
+
+        public AnimeUserStatus? GetAnimeUserStatus(int p_id)
+        {
+            return ToEntity(this._context.AnimeUserStatuses
+                .SingleOrDefault(a => a.Id == p_id));
+        }
+
+        public void CreateAnimeUserStatus(AnimeUserStatus_DTO p_animeUserStatus)
         {
             if (p_animeUserStatus == null)
             {
                 throw new ArgumentNullException(nameof(p_animeUserStatus));
             }
 
+
             this._context.AnimeUserStatuses.Add(p_animeUserStatus);
             this._context.SaveChanges();
         }
 
-        public void UpdateAnimeUserStatus(AnimeUserStatus p_animeUserStatus)
+        public void UpdateAnimeUserStatus(AnimeUserStatus_DTO p_animeUserStatus)
         {
             if (p_animeUserStatus == null)
             {
@@ -47,7 +64,7 @@ namespace AnimeFollowMVC.DAL.SQLServer.Depots
 
         public void DeleteAnimeUserStatus(int p_id)
         {
-            AnimeUserStatus? animeUserStatus = this._context.AnimeUserStatuses
+            AnimeUserStatus_DTO? animeUserStatus = this._context.AnimeUserStatuses
                 .SingleOrDefault(a => a.Id == p_id);
 
             if (animeUserStatus is not null)
@@ -55,6 +72,19 @@ namespace AnimeFollowMVC.DAL.SQLServer.Depots
                 this._context.AnimeUserStatuses.Remove(animeUserStatus);
                 this._context.SaveChanges();
             }
+        }
+
+        private AnimeUserStatus ToEntity(AnimeUserStatus_DTO p_post)
+        {
+            return new AnimeUserStatus
+            {
+                //Id = 0,
+                Anime = this._context.Animes.SingleOrDefault(a => a.Id == p_post.AnimeId),
+                User = this._context.Users.SingleOrDefault(u => u.Id == p_post.UserId),
+                CurrentNote = p_post.CurrentNote,
+                DernierEpisodeEcoute = p_post.CurrentNote,
+                URISourceAnime = p_post.URISourceAnime,
+            };
         }
         
     }
